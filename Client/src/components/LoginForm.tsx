@@ -1,19 +1,20 @@
-import React, { useState, type FormEvent, type ChangeEvent } from "react";
-import { Link } from "react-router-dom";
+import { useState, type FormEvent, type ChangeEvent } from "react";
+import { Link, useNavigate } from "react-router-dom";
+// import { UserLoginRequest } from "../handlers/UserApiHandler";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../redux/Store";
+import { LoginUserAction } from "../redux/slices/UserSlice";
 
-interface LoginFormProps {
-  onSubmit?: (data: { email: string; password: string }) => void;
-}
-
-const LoginForm: React.FC<LoginFormProps> = () =>
+const LoginForm = () =>
   // {onSubmit}
   {
     const [formData, setFormData] = useState({
       email: "",
       password: "",
     });
-
+    const [error, setError] = useState<string>("");
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
@@ -22,15 +23,23 @@ const LoginForm: React.FC<LoginFormProps> = () =>
         [name]: value,
       }));
     };
-
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const dispatch = useDispatch<AppDispatch>();
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       // onSubmit(formData);
+      try {
+        await dispatch(LoginUserAction(formData));
+        navigate("/");
+      } catch (error) {
+        if (error instanceof Error) {
+          setError(error.message);
+        }
+      }
     };
 
     return (
       <div className="min-h-screen flex items-center justify-center p-4">
-        <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden">
+        <div className="bg-gradient-to-tl from-indigo-600/80 via-cyan-600/80  to-slate-800/80 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full max-w-lg relative overflow-hidden">
           {/* Background accents */}
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-400/40 via-blue-400/40 to-indigo-400/40"></div>
           <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-violet-400/5 to-blue-400/5 rounded-full blur-xl"></div>
@@ -74,7 +83,7 @@ const LoginForm: React.FC<LoginFormProps> = () =>
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 pl-11 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                    className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 pl-11 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
                     placeholder="Enter your email"
                     required
                   />
@@ -107,7 +116,7 @@ const LoginForm: React.FC<LoginFormProps> = () =>
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 pl-11 pr-11 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                    className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 pl-11 pr-11 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
                     placeholder="Enter your password"
                     required
                   />
@@ -173,19 +182,9 @@ const LoginForm: React.FC<LoginFormProps> = () =>
               {/* Remember Me & Forgot Password */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center">
-                  <input type="checkbox" className="sr-only" />
-                  <div className="w-4 h-4 bg-white/10 border border-white/20 rounded flex items-center justify-center">
-                    <svg
-                      className="w-3 h-3 text-violet-300 hidden"
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
+                  {/* <input type="checkbox" className="sr-only" /> */}
+                  <div className="">
+                  <input type="checkbox" name="" id="" className="m-0"/>
                   </div>
                   <span className="ml-2 text-white/70 text-sm">
                     Remember me
@@ -193,16 +192,20 @@ const LoginForm: React.FC<LoginFormProps> = () =>
                 </label>
                 <button
                   type="button"
-                  className="text-violet-300 hover:text-violet-200 text-sm transition-colors"
+                  className="text-white hover:text-cyan-200 text-sm transition-colors"
                 >
                   Forgot password?
                 </button>
               </div>
 
+              {error && (
+                <p className="text-red-400 text-center text-sm mt-2">{error}</p>
+              )}
+
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 text-white font-semibold rounded-xl border border-violet-400/30 hover:border-violet-400/50 hover:bg-gradient-to-r hover:from-violet-500/30 hover:to-indigo-500/30 shadow-lg hover:shadow-violet-500/20 transition-all duration-300"
+                className="w-full px-6 py-3 bg-gradient-to-tl from-indigo-500/20 to-cyan-500/20 text-white font-semibold rounded-xl border border-cyan-400/30 hover:border-cyan-400/50 hover:-translate-y-1 bg-white/20 shadow-lg hover:shadow-violet-500/20 transition-all duration-300"
               >
                 Sign In
               </button>
@@ -267,7 +270,7 @@ const LoginForm: React.FC<LoginFormProps> = () =>
                 Don't have an account?{" "}
                 <Link
                   to={"/signUp"}
-                  className="text-violet-300 hover:text-violet-200 font-medium transition-colors"
+                  className="text-white hover:text-cyan-200 font-medium transition-colors"
                 >
                   Sign up
                 </Link>
@@ -278,5 +281,4 @@ const LoginForm: React.FC<LoginFormProps> = () =>
       </div>
     );
   };
-
 export default LoginForm;

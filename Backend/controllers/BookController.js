@@ -2,12 +2,11 @@ import * as bookService from "../services/BookService.js";
 
 export async function getBooksControl(req, res) {
   try {
-    const { sort, category, price } = req.query;
+    const { sort, category } = req.query;
     // console.log(req.query.category)
     // console.log(category,sort)
     const query = {
       category,
-      price,
     };
     const books = await bookService.getBooks(query, sort);
     res.status(200).json(books);
@@ -35,7 +34,7 @@ export async function getBookByIdControl(req, res) {
 
 export async function addBookControl(req, res) {
   try {
-    const book = await bookService.addBook(req.body);
+    const book = await bookService.addBook(req.body, req.currentUser);
     res.status(201).json(book);
   } catch (error) {
     res

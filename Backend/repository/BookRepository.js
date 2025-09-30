@@ -5,7 +5,10 @@ const BookModel = Book;
 
 export const CreateBook = async (data) => {
   const myBook = new Book(data);
-  return await myBook.save();
+  console.log(myBook, "1");
+  const book = await myBook.save();
+  console.log(book, "2");
+  return book;
 };
 
 export const GetAllBooks = async (filter, sort) => {
@@ -29,6 +32,9 @@ export const EditBook = async (bookId, book) => {
 };
 
 export const GetBook = async (bookId) => {
-  const myBook = await BookModel.findById(bookId);
+  const myBook = await BookModel.findById(bookId).populate(
+    "createdBy",
+    "username role"
+  );
   return myBook;
 };

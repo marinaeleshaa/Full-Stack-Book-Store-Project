@@ -22,10 +22,10 @@ const BookSchema = new mongoose.Schema(
     Url: {
       type: String,
       required: [true, "Image URL is required"],
-      match: [
-        /^https?:\/\/.+\.(jpg|jpeg|png|webp)$/,
-        "Must be a valid image URL",
-      ],
+      // match: [
+      //   /^https?:\/\/.+\.(jpg|jpeg|png|webp)$/,
+      //   "Must be a valid image URL",
+      // ],
     },
 
     oldPrice: {

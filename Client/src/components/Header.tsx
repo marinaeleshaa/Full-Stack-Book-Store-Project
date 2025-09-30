@@ -1,10 +1,14 @@
 "use client";
 
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuItems,
   // Popover,
   // PopoverButton,
   PopoverGroup,
@@ -22,6 +26,9 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "../redux/Store";
+import { isLoginCheck, LogOutAction } from "../redux/slices/UserSlice";
 
 const navigation = {
   pages: [
@@ -34,6 +41,17 @@ const navigation = {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
+  const { isLogin, user } = useSelector((state: RootState) => state.user);
+  const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(isLoginCheck());
+  }, [dispatch]);
+
+  const handleLogout = () => {
+    dispatch(LogOutAction());
+  };
 
   return (
     <div className="">
@@ -144,8 +162,8 @@ export default function Header() {
         </div>
       </Dialog>
 
-      <header className="bg-transparent backdrop-blur-3xl shadow-xl relative border-b border-violet-300/20">
-        <div className="absolute inset-0 bg-gradient-to-r from-violet-500/5 via-transparent to-indigo-500/5"></div>
+      <header className="bg-transparent backdrop-blur-3xl shadow-xl relative z-50 border-b border-violet-300/20">
+        <div className="absolute inset-0 bg-gradient-to-r from-indigo-600 via-cyan-600  to-slate-800"></div>
         <nav
           aria-label="Top"
           className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10"
@@ -154,7 +172,7 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setOpen(true)}
-              className="relative rounded-md bg-white/10 backdrop-blur-sm p-2 text-gray-400 lg:hidden border border-violet-300/30 hover:border-violet-300/50 transition-all"
+              className="relative rounded-md bg-white/10 backdrop-blur-sm p-2 text-gray-400 lg:hidden border border-cyan-300/30 hover:border-violet-300/50 transition-all"
             >
               <span className="absolute -inset-0.5" />
               <span className="sr-only">Open menu</span>
@@ -177,6 +195,14 @@ export default function Header() {
             {/* Flyout menus */}
             <PopoverGroup className="hidden lg:ml-8 lg:block lg:self-stretch">
               <div className="flex h-full space-x-8">
+                {isLogin && user?.role === "admin" && (
+                  <Link
+                    to={"/dashboard"}
+                    className="flex items-center text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
+                  >
+                    Dashboard
+                  </Link>
+                )}
                 {navigation.pages.map((page) => (
                   <Link
                     key={page.name}
@@ -190,22 +216,6 @@ export default function Header() {
             </PopoverGroup>
 
             <div className="ml-auto flex items-center">
-              <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                <Link
-                  to="/signIn"
-                  className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
-                >
-                  Sign in
-                </Link>
-                <span aria-hidden="true" className="h-6 w-px bg-white/20" />
-                <Link
-                  to="/signUp"
-                  className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
-                >
-                  Create account
-                </Link>
-              </div>
-
               {/* Search */}
               <div className="flex lg:ml-6">
                 {/* Mobile: icon only */}
@@ -222,10 +232,73 @@ export default function Header() {
                   <input
                     type="text"
                     placeholder="Search Book..."
-                    className="w-64 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-violet-500 transition"
+                    className="w-64 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-cyan-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-200 transition"
                   />
                 </div>
               </div>
+              {!isLogin && (
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                  <Link
+                    to="/signIn"
+                    className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
+                  >
+                    Sign in
+                  </Link>
+                  <span aria-hidden="true" className="h-6 w-px bg-white/20" />
+                  <Link
+                    to="/signUp"
+                    className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
+                  >
+                    Create account
+                  </Link>
+                </div>
+              )}
+
+              {isLogin && (
+                <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
+                  <Menu as="div" className="relative ml-3 ">
+                    <MenuButton className="relative flex rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                      <span className="absolute -inset-1.5" />
+                      <span className="sr-only">Open user menu</span>
+                      <img
+                        alt=""
+                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        className="size-8 rounded-full bg-gray-800 outline outline-1 -outline-offset-1 outline-white/10"
+                      />
+                    </MenuButton>
+
+                    <MenuItems
+                      transition
+                      className="absolute right-0 z-[9999] mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 outline outline-1 -outline-offset-1 outline-white/10 transition data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                    >
+                      <MenuItem>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                        >
+                          Your profile
+                        </a>
+                      </MenuItem>
+                      <MenuItem>
+                        <a
+                          href="#"
+                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                        >
+                          Settings
+                        </a>
+                      </MenuItem>
+                      <MenuItem>
+                        <button
+                          onClick={handleLogout}
+                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                        >
+                          Sign out
+                        </button>
+                      </MenuItem>
+                    </MenuItems>
+                  </Menu>
+                </div>
+              )}
 
               {/* Cart */}
               {/* <div className="ml-4 flow-root lg:ml-6">

@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+option {
+  background: #e0f2fe ;
+  color: #1e293b; /* slate-800 */
+  padding: 10px;
+}
+
+option:checked {
+  background: #06b6d4; /* cyan-500 */
+  color: white;
+}
+
+option:hover {
+  background: #072234; /* cyan-100 */
+}
+
+

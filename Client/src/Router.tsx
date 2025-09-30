@@ -9,6 +9,8 @@ import BooksContainer from "./pages/BooksContainer";
 import BookDetailsPage from "./pages/BookDetailsPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
+import Dashboard from "./components/UserDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,6 +21,14 @@ const Router = createBrowserRouter(
         <Route path={`bookDetails/:id`} element={<BookDetailsPage />} />
         <Route path={`signUp`} element={<SignUpPage />} />
         <Route path={`signIn`} element={<SignInPage />} />
+        <Route
+          path={`dashboard`}
+          element={
+            <ProtectedRoute isMustLogin isForAdmin redirectPath="/">
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     </>
   )

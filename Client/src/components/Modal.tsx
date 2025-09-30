@@ -31,6 +31,9 @@ const Modal: React.FC<ModalProps> = ({
       title: "",
       Url: "",
       category: "action",
+      createdBy: {
+        _id: "",
+      },
     }),
     []
   );
@@ -71,8 +74,8 @@ const Modal: React.FC<ModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full max-w-lg mx-4 relative overflow-hidden">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-cyan-900/30 backdrop-blur-sm">
+      <div className="bg-slate-600/60 backdrop-blur-md border border-white/20 rounded-2xl shadow-2xl w-full max-w-lg mx-4 relative overflow-hidden">
         {/* Background accent */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-violet-400/40 via-blue-400/40 to-indigo-400/40"></div>
         <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-violet-400/5 to-blue-400/5 rounded-full blur-xl"></div>
@@ -113,7 +116,7 @@ const Modal: React.FC<ModalProps> = ({
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
-                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
                 placeholder="Enter book title"
                 required
               />
@@ -129,7 +132,7 @@ const Modal: React.FC<ModalProps> = ({
                 name="Url"
                 value={formData.Url}
                 onChange={handleChange}
-                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
                 placeholder="Enter image URL"
                 required
               />
@@ -144,7 +147,7 @@ const Modal: React.FC<ModalProps> = ({
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all resize-none"
+                className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all resize-none"
                 rows={3}
                 placeholder="Enter book description"
                 required
@@ -160,25 +163,40 @@ const Modal: React.FC<ModalProps> = ({
                 name="category"
                 value={formData.category}
                 onChange={handleChange}
-                className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6,9 12,15 18,9'/></svg>')] bg-no-repeat bg-right bg-[length:20px] pr-10"
+                className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all appearance-none bg-[url('data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.6)' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6,9 12,15 18,9'/></svg>')] bg-no-repeat bg-right bg-[length:20px] pr-10"
                 required
               >
-                <option value="action" className="bg-gray-500/50  text-gray-700">
+                <option
+                  value="action"
+                  className="bg-gray-500/50  text-gray-700"
+                >
                   Action
                 </option>
                 <option value="drama" className="bg-gray-500/50  text-gray-700">
                   Drama
                 </option>
-                <option value="comedy" className="bg-gray-500/50  text-gray-700">
+                <option
+                  value="comedy"
+                  className="bg-gray-500/50  text-gray-700"
+                >
                   Comedy
                 </option>
-                <option value="romance" className="bg-gray-500/50  text-gray-700">
+                <option
+                  value="romance"
+                  className="bg-gray-500/50  text-gray-700"
+                >
                   Romance
                 </option>
-                <option value="horror" className="bg-gray-500/50  text-gray-700">
+                <option
+                  value="horror"
+                  className="bg-gray-500/50  text-gray-700"
+                >
                   Horror
                 </option>
-                <option value="sci-fi" className="bg-gray-500/50  text-gray-700">
+                <option
+                  value="sci-fi"
+                  className="bg-gray-500/50  text-gray-700"
+                >
                   Sci-Fi
                 </option>
               </select>
@@ -195,7 +213,7 @@ const Modal: React.FC<ModalProps> = ({
                   name="oldPrice"
                   value={formData.oldPrice ?? 0}
                   onChange={handleChange}
-                  className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                  className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
                   step="0.01"
                   placeholder="0.00"
                   required
@@ -211,7 +229,7 @@ const Modal: React.FC<ModalProps> = ({
                   name="discountedPrice"
                   value={formData.discountedPrice ?? 0}
                   onChange={handleChange}
-                  className="w-full bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
+                  className="w-full bg-white/50 backdrop-blur-sm border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-violet-400/50 focus:border-violet-400/50 transition-all"
                   step="0.01"
                   placeholder="0.00"
                   required
@@ -223,7 +241,7 @@ const Modal: React.FC<ModalProps> = ({
             <div className="pt-4">
               <button
                 type="submit"
-                className="w-full px-6 py-3 bg-gradient-to-r from-violet-500/20 to-indigo-500/20 text-white font-semibold rounded-xl border border-violet-400/30 hover:border-violet-400/50 hover:bg-gradient-to-r hover:from-violet-500/30 hover:to-indigo-500/30 shadow-lg hover:shadow-violet-500/20 transition-all duration-300"
+                className="w-full px-6 py-3 bg-gradient-to-r from-slate-700/20 to-slate-500/20 text-white font-semibold rounded-xl border border-violet-400/30 hover:border-violet-400/50 hover:bg-gradient-to-r hover:from-cyan-500/30 hover:to-indigo-500/30 shadow-lg hover:shadow-violet-500/20 transition-all duration-300"
               >
                 {buttonText}
               </button>

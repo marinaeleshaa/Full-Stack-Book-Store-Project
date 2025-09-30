@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 process.loadEnvFile(".env");
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
-const jwtExpiresIn = "2h";
+const jwtExpiresIn = "2d";
 
 export const GenerateToken = (payload) => {
   return jwt.sign(payload, jwtSecretKey, {

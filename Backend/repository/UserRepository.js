@@ -18,3 +18,15 @@ export const GetUserByUn = async (username) => {
   return MyUser;
 };
 
+export const GetUserByEmail = async (email) => {
+  return await userModel.findOne({ email });
+};
+
+export const updateUserRole = async ( id, role ) => {
+  const updatedUser = await userModel.findByIdAndUpdate(
+    id,
+    { role },
+    { new: true } // علشان يرجّع اليوزر بعد التعديل
+  );
+  return updatedUser;
+};
