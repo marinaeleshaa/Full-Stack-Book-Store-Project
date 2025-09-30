@@ -11,6 +11,7 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import Dashboard from "./components/UserDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import UserProfile from "./pages/ProfilePage";
 
 const Router = createBrowserRouter(
   createRoutesFromElements(
@@ -26,6 +27,14 @@ const Router = createBrowserRouter(
           element={
             <ProtectedRoute isMustLogin isForAdmin redirectPath="/">
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="profile"
+          element={
+            <ProtectedRoute isMustLogin redirectPath="/signIn">
+              <UserProfile />
             </ProtectedRoute>
           }
         />

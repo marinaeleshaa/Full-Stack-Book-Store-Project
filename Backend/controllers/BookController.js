@@ -1,19 +1,19 @@
 import * as bookService from "../services/BookService.js";
-
 export async function getBooksControl(req, res) {
   try {
-    const { sort, category } = req.query;
-    // console.log(req.query.category)
-    // console.log(category,sort)
-    const query = {
-      category,
-    };
+    const { sort, category, searchText } = req.query;
+
+    const query = {};
+    if (category) query.category = category;
+    if (searchText) query.searchText = searchText;
+
     const books = await bookService.getBooks(query, sort);
     res.status(200).json(books);
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Failed to fetch books", error: error.message });
+    res.status(500).json({
+      message: "Failed to fetch books",
+      error: error.message,
+    });
   }
 }
 

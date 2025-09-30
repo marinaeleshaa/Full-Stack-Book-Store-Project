@@ -7,7 +7,7 @@ export const AuthMiddleware = (req, res, next) => {
   if (!authHeader) return res.status(401).json({ error: "missing token" });
 
   const token = authHeader.split(" ")[1];
-  console.log(token)
+  // console.log(token)
   try {
     const verified = VerifyToken(token);
     console.log("verification done.");
@@ -15,6 +15,7 @@ export const AuthMiddleware = (req, res, next) => {
       id: verified.id,
       username: verified.username,
       role: verified.role,
+      email:verified.email
     };
     next();
   } catch (error) {

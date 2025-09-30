@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { useEffect, useState } from "react";
 import Card from "../components/Card";
 import Modal from "../components/Modal";
@@ -32,14 +33,16 @@ const BooksContainer = () => {
   ];
 
   const dispatch = useDispatch<AppDispatch>();
-  const { books } = useSelector((state: RootState) => state.books);
+  const { books, searchText } = useSelector((state: RootState) => state.books);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      await dispatch(GetAllBooksAction(category));
-    };
-    fetchBooks();
-  }, [currentBook, category, dispatch]);
+    dispatch(
+      GetAllBooksAction({
+        category,
+        searchText,
+      })
+    );
+  }, [category, searchText, dispatch, currentBook]);
 
   const handleAddModal = () => {
     setCurrentBook(null);

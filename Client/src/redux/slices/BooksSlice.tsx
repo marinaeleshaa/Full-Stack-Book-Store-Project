@@ -14,13 +14,27 @@ import {
 export interface booksState {
   books: IBook[];
   loading: boolean;
+  searchText: {
+    name: "searchText";
+    value: string;
+  };
   error: string | null;
 }
 
 // get all books
+// export const GetAllBooksAction = createAsyncThunk(
+//   "books/getAll",
+//   async (query: { name: string; value: string }) => {
+//     const books = await getAllBooks(query);
+//     return books;
+//   }
+// );
 export const GetAllBooksAction = createAsyncThunk(
   "books/getAll",
-  async (query: { name: string; value: string }) => {
+  async (query: {
+    category?: { name: string; value: string };
+    searchText?: { name: string; value: string };
+  }) => {
     const books = await getAllBooks(query);
     return books;
   }
@@ -57,12 +71,20 @@ const initialState: booksState = {
   books: [],
   loading: false,
   error: null,
+  searchText: {
+    name: "searchText",
+    value: "",
+  },
 };
 
 export const BooksSlice = createSlice({
   name: "books",
   initialState,
-  reducers: {},
+  reducers: {
+    SearchByTextAction: (state, action: PayloadAction<string>) => {
+      state.searchText.value = action.payload;
+    },
+  },
   extraReducers(builder) {
     // ================= Get All =================
     builder.addCase(GetAllBooksAction.pending, (state) => {
@@ -136,4 +158,6 @@ export const BooksSlice = createSlice({
   },
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
+export const { SearchByTextAction } = BooksSlice.actions;
 export default BooksSlice.reducer;

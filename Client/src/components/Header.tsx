@@ -9,14 +9,8 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-  // Popover,
-  // PopoverButton,
   PopoverGroup,
-  // PopoverPanel,
-  // Tab,
   TabGroup,
-  // TabList,
-  // TabPanel,
   TabPanels,
 } from "@headlessui/react";
 import {
@@ -25,10 +19,11 @@ import {
   // ShoppingBagIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/Store";
 import { isLoginCheck, LogOutAction } from "../redux/slices/UserSlice";
+import { SearchByTextAction } from "../redux/slices/BooksSlice";
 
 const navigation = {
   pages: [
@@ -41,9 +36,22 @@ const navigation = {
 
 export default function Header() {
   const [open, setOpen] = useState(false);
-  // const [isLogin, setIsLogin] = useState(false);
+  const { pathname } = useLocation();
+  // console.log(pathname);
   const { isLogin, user } = useSelector((state: RootState) => state.user);
   const dispatch = useDispatch<AppDispatch>();
+
+  const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    if (value.trim() === "") {
+      // dispatch(GetAllBooksAction({ name: "searchText", value: "" }));
+      dispatch(SearchByTextAction(""));
+    } else {
+      dispatch(SearchByTextAction(value));
+      // dispatch(GetAllBooksAction({ name: "searchText", value }));
+    }
+  };
 
   useEffect(() => {
     dispatch(isLoginCheck());
@@ -217,25 +225,31 @@ export default function Header() {
 
             <div className="ml-auto flex items-center">
               {/* Search */}
-              <div className="flex lg:ml-6">
-                {/* Mobile: icon only */}
-                <button
-                  type="button"
-                  className="p-2 text-white/70 hover:text-white lg:hidden rounded-md hover:bg-white/10 transition-all"
-                >
-                  <span className="sr-only">Open search</span>
-                  <MagnifyingGlassIcon aria-hidden="true" className="size-6" />
-                </button>
+              {pathname === "/books" && (
+                <div className="flex lg:ml-6">
+                  {/* Mobile: icon only */}
+                  <button
+                    type="button"
+                    className="p-2 text-white/70 hover:text-white lg:hidden rounded-md hover:bg-white/10 transition-all"
+                  >
+                    <span className="sr-only">Open search</span>
+                    <MagnifyingGlassIcon
+                      aria-hidden="true"
+                      className="size-6"
+                    />
+                  </button>
 
-                {/* Desktop: input */}
-                <div className="hidden lg:flex items-center">
-                  <input
-                    type="text"
-                    placeholder="Search Book..."
-                    className="w-64 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-cyan-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-200 transition"
-                  />
+                  {/* Desktop: input */}
+                  <div className="hidden lg:flex items-center">
+                    <input
+                      type="text"
+                      placeholder="Search Book..."
+                      onInput={inputHandler}
+                      className="w-64 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-cyan-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-200 transition"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
               {!isLogin && (
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <Link
@@ -262,7 +276,7 @@ export default function Header() {
                       <span className="sr-only">Open user menu</span>
                       <img
                         alt=""
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                        src="userIcon.png"
                         className="size-8 rounded-full bg-gray-800 outline outline-1 -outline-offset-1 outline-white/10"
                       />
                     </MenuButton>
@@ -272,12 +286,12 @@ export default function Header() {
                       className="absolute right-0 z-[9999] mt-2 w-48 origin-top-right rounded-md bg-gray-800 py-1 outline outline-1 -outline-offset-1 outline-white/10 transition data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                     >
                       <MenuItem>
-                        <a
-                          href="#"
+                        <Link
+                          to="/profile"
                           className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
                         >
                           Your profile
-                        </a>
+                        </Link>
                       </MenuItem>
                       <MenuItem>
                         <a

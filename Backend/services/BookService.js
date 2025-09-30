@@ -9,17 +9,24 @@ import {
 export async function getBooks(query, sort) {
   let filter = {};
   // console.log(category)
-  const { category } = query;
-  console.log(category);
-  if (category) {
-    console.log(category);
-    // if (category)
-    // const regex = new RegExp(query, "i");
-    // filter.$or = [{ title: regex }, { description: regex }];
-    filter = { category };
+  const { category, searchText } = query;
+  // console.log(category);
+  // if (category) {
+  //   // console.log(category);
+  //   // if (category)
+  //   // const regex = new RegExp(query, "i");
+  //   // filter.$or = [{ title: regex }, { description: regex }];
+  //   filter = { category };
+  // }
+
+  if (category) filter.category = category;
+  if (searchText) {
+    const regex = new RegExp(searchText, "i");
+    filter.$or = [{ title: regex }, { description: regex }];
   }
   return await GetAllBooks(filter, sort);
 }
+
 
 export async function getBookById(id) {
   return await GetBook(id);
@@ -32,7 +39,7 @@ export async function addBook(data, creator) {
 
 const verifyUser = (currentUser, bookCreator, method) => {
   console.log("Book creator:", bookCreator, "Current user:", currentUser);
-  console.log(bookCreator == currentUser.id)
+  console.log(bookCreator == currentUser.id);
   if (currentUser.id !== bookCreator && currentUser.role !== "admin") {
     throw new Error(`you cant ${method}`);
   }

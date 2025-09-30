@@ -69,7 +69,12 @@ const loginService = async ({ email, password }) => {
   if (!isSuccess) {
     throw new Error("email or password invalid");
   }
-  const payload = { username: user.username, role: user.role, id: user._id };
+  const payload = {
+    username: user.username,
+    role: user.role,
+    id: user._id,
+    email: user.email,
+  };
   return GenerateToken(payload);
 };
 

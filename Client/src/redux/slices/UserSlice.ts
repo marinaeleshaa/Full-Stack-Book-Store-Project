@@ -38,7 +38,7 @@ export const GetUsersAction = createAsyncThunk<IUser[]>(
   "user/GetUsers",
   async () => {
     const users = await GetAllUsers();
-    console.log(users)
+    console.log(users);
     return users as IUser[];
   }
 );
@@ -53,10 +53,12 @@ export const UpdateUserRoleAction = createAsyncThunk<
 
 // initial state
 const initialState: UserState = {
-  isLogin: false,
+  isLogin: !!localStorage.getItem("token"),
   token: "",
   error: "",
-  user: null,
+  user: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user")!)
+    : null,
   users: [],
 };
 
