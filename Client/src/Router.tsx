@@ -21,7 +21,14 @@ const Router = createBrowserRouter(
         <Route path="books" element={<BooksContainer />} />
         <Route path={`bookDetails/:id`} element={<BookDetailsPage />} />
         <Route path={`signUp`} element={<SignUpPage />} />
-        <Route path={`signIn`} element={<SignInPage />} />
+        <Route
+          path={`signIn`}
+          element={
+            <ProtectedRoute  redirectPath="/">
+              <SignInPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path={`dashboard`}
           element={

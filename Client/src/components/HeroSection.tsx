@@ -1,6 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 function HeroSection({ title }: { title: string }) {
+  const { t } = useTranslation();
   return (
     <div className="relative min-h-[85vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-cyan-50/30 to-indigo-50/40 ">
       {/* Animated background elements */}
@@ -45,7 +47,7 @@ function HeroSection({ title }: { title: string }) {
         {/* Main title with staggered animation */}
         <h1 className="text-5xl md:text-7xl lg:text-8xl font-black my-10 leading-tight">
           <span className="inline-block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-cyan-600 to-slate-800 animate-fadeInUp ">
-            {title}
+            {t(`${title}`)}
           </span>
         </h1>
 
@@ -61,9 +63,9 @@ function HeroSection({ title }: { title: string }) {
           className="text-lg md:text-xl text-slate-600 mb-12 max-w-3xl mx-auto leading-relaxed animate-fadeInUp"
           style={{ animationDelay: "0.2s" }}
         >
-          Immerse yourself in a world of stories, knowledge, and imagination.
-          Explore thousands of books across every genre and discover your next
-          favorite read.
+          {t(
+            "Immerse yourself in a world of stories, knowledge, and imagination. Explore thousands of books across every genre and discover your next favorite read."
+          )}
         </p>
 
         {/* CTA Buttons */}
@@ -78,7 +80,7 @@ function HeroSection({ title }: { title: string }) {
           >
             <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/0 via-cyan-400/20 to-cyan-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
             <span className="relative flex items-center space-x-2">
-              <span>Explore Books</span>
+              <span>{t("Explore Books")}</span>
               <svg
                 className="w-5 h-5 transform group-hover:translate-x-1 transition-transform"
                 fill="none"
@@ -117,7 +119,7 @@ function HeroSection({ title }: { title: string }) {
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              <span>Watch Demo</span>
+              <span>{t("Watch Demo")}</span>
             </span>
           </button>
         </div>
@@ -133,7 +135,7 @@ function HeroSection({ title }: { title: string }) {
                 10K+
               </div>
               <div className="text-sm text-slate-600 font-semibold">
-                Books Available
+                {t('Books Available')}
               </div>
             </div>
           </div>
@@ -144,7 +146,7 @@ function HeroSection({ title }: { title: string }) {
                 50K+
               </div>
               <div className="text-sm text-slate-600 font-semibold">
-                Happy Readers
+                {t('Happy Readers')}
               </div>
             </div>
           </div>
@@ -155,7 +157,7 @@ function HeroSection({ title }: { title: string }) {
                 4.9★
               </div>
               <div className="text-sm text-slate-600 font-semibold">
-                Average Rating
+                {t('Average Rating')}
               </div>
             </div>
           </div>

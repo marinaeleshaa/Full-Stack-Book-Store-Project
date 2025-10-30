@@ -5,9 +5,9 @@ const BookModel = Book;
 
 export const CreateBook = async (data) => {
   const myBook = new Book(data);
-  console.log(myBook, "1");
+  // console.log(myBook, "1");
   const book = await myBook.save();
-  console.log(book, "2");
+  // console.log(book, "2");
   return book;
 };
 

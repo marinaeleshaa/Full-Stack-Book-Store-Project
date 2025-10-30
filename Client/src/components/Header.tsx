@@ -24,6 +24,8 @@ import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../redux/Store";
 import { isLoginCheck, LogOutAction } from "../redux/slices/UserSlice";
 import { SearchByTextAction } from "../redux/slices/BooksSlice";
+import { setLanguage } from "../redux/slices/LanguageSlice";
+import { useTranslation } from "react-i18next";
 
 const navigation = {
   pages: [
@@ -37,8 +39,12 @@ const navigation = {
 export default function Header() {
   const [open, setOpen] = useState(false);
   const { pathname } = useLocation();
+  const {
+    i18n: { changeLanguage  },
+  } = useTranslation();
   // console.log(pathname);
   const { isLogin, user } = useSelector((state: RootState) => state.user);
+  const { lang } = useSelector((state: RootState) => state.language);
   const dispatch = useDispatch<AppDispatch>();
 
   const inputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,14 +61,24 @@ export default function Header() {
 
   useEffect(() => {
     dispatch(isLoginCheck());
-  }, [dispatch]);
+    // dispatch(setLanguage(language))
+    changeLanguage(lang)
+  }, [dispatch,changeLanguage,lang]);
 
   const handleLogout = () => {
     dispatch(LogOutAction());
   };
 
+  const handleChangeLanguage = () => {
+    const newLanguage = lang === "en" ? "ar" : "en";
+    dispatch(setLanguage(newLanguage));
+    changeLanguage(newLanguage);
+  };
+  const { t } = useTranslation();
+
+  const dirForHeader = lang === "en" ? "ltr" : "rtl";
   return (
-    <div className="">
+    <div className="" dir={dirForHeader}>
       {/* Mobile menu */}
       <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
         <DialogBackdrop
@@ -176,7 +192,7 @@ export default function Header() {
           aria-label="Top"
           className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10"
         >
-          <div className="flex h-16 items-center">
+          <div className="flex  h-16 items-center">
             <button
               type="button"
               onClick={() => setOpen(true)}
@@ -191,39 +207,46 @@ export default function Header() {
             <div className="ml-4 flex lg:ml-0">
               <a href="#" className="flex items-center space-x-2">
                 <span className="sr-only">BookStore</span>
-                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-400/20 to-indigo-400/20 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/30">
+                {/* <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-400/20 to-indigo-400/20 backdrop-blur-sm flex items-center justify-center shadow-lg border border-white/30">
                   <span className="text-white font-bold text-lg">B</span>
-                </div>
+                </div> */}
+                <img src="/logo.png" className="w-30 h-10" alt="" />
                 <span className="hidden sm:block text-white font-bold text-xl">
-                  BookStore
+                  {t("Booksy")}
                 </span>
               </a>
             </div>
 
             {/* Flyout menus */}
             <PopoverGroup className="hidden lg:ml-8 lg:block lg:self-stretch">
-              <div className="flex h-full space-x-8">
+              <div className="flex h-full ">
                 {isLogin && user?.role === "admin" && (
                   <Link
                     to={"/dashboard"}
                     className="flex items-center text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    Dashboard
+                    {t("Dashboard")}
                   </Link>
                 )}
                 {navigation.pages.map((page) => (
                   <Link
                     key={page.name}
                     to={page.href}
-                    className="flex items-center text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
+                    className={`flex items-center text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all m-0 ${
+                      dirForHeader === "ltr" ? "ml-5" : "mr-5"
+                    }`}
                   >
-                    {page.name}
+                    {t(`${page.name}`)}
                   </Link>
                 ))}
               </div>
             </PopoverGroup>
 
-            <div className="ml-auto flex items-center">
+            <div
+              className={`${
+                dirForHeader === "ltr" ? "ml-auto" : "mr-auto"
+              } flex items-center`}
+            >
               {/* Search */}
               {pathname === "/books" && (
                 <div className="flex lg:ml-6">
@@ -243,27 +266,36 @@ export default function Header() {
                   <div className="hidden lg:flex items-center">
                     <input
                       type="text"
-                      placeholder="Search Book..."
+                      placeholder={t("Search Book...")}
                       onInput={inputHandler}
                       className="w-64 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-cyan-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-200 transition"
                     />
                   </div>
                 </div>
               )}
+              <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-400/20 to-indigo-400/20 backdrop-blur-sm flex items-center justify-center shadow-lg border mx-3 border-white/30">
+                <button
+                  className="text-white font-bold text-lg"
+                  onClick={handleChangeLanguage}
+                >
+                  {lang === "en" ? "ar" : "en"}
+                </button>
+              </div>
+
               {!isLogin && (
                 <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                   <Link
                     to="/signIn"
                     className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    Sign in
+                    {t("Sign in")}
                   </Link>
                   <span aria-hidden="true" className="h-6 w-px bg-white/20" />
                   <Link
                     to="/signUp"
                     className="text-sm font-medium text-white/90 hover:text-white px-3 py-2 rounded-md hover:bg-white/10 transition-all"
                   >
-                    Create account
+                    {t("Create account")}
                   </Link>
                 </div>
               )}
@@ -288,25 +320,25 @@ export default function Header() {
                       <MenuItem>
                         <Link
                           to="/profile"
-                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                          className="block w-[100%] px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
                         >
-                          Your profile
+                          {t("Your profile")}
                         </Link>
                       </MenuItem>
                       <MenuItem>
                         <a
                           href="#"
-                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                          className="block w-[100%] px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
                         >
-                          Settings
+                          {t("Settings")}
                         </a>
                       </MenuItem>
                       <MenuItem>
                         <button
                           onClick={handleLogout}
-                          className="block px-4 py-2 text-sm text-gray-300 data-[focus]:bg-white/5 data-[focus]:outline-none"
+                          className="block w-[100%] px-4 py-2 text-sm  text-gray-300 data-[focus]:bg-red-700 data-[focus]:outline-none"
                         >
-                          Sign out
+                          {t("Sign out")}
                         </button>
                       </MenuItem>
                     </MenuItems>

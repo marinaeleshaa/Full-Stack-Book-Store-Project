@@ -12,6 +12,7 @@ import {
   GetAllBooksAction,
   UpdateBookAction,
 } from "../redux/slices/BooksSlice";
+import { useTranslation } from "react-i18next";
 
 const BooksContainer = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -19,6 +20,7 @@ const BooksContainer = () => {
   const [category, setCategory] = useState({ name: "category", value: "all" });
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLogin } = useSelector((state: RootState) => state.user);
+  const { t } = useTranslation();
   // console.log(user);
   // console.log(user?.role);
 
@@ -74,15 +76,21 @@ const BooksContainer = () => {
     // });
     dispatch(DeleteBookAction(bookId));
   };
+  const { lang } = useSelector((state: RootState) => state.language);
+
+  const dirForHeader = lang === "en" ? "ltr" : "rtl";
 
   return (
-    <div className="container max-w-7xl mx-auto flex flex-col px-4 py-8">
+    <div
+      className="container max-w-7xl mx-auto flex flex-col px-4 py-8 "
+      dir={dirForHeader}
+    >
       {/* Header Controls */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 justify-between mb-10">
         {/* Page Title */}
         <div>
           <h1 className="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-cyan-600 to-slate-800">
-            Book Collection
+            {t("Book Collection")}
           </h1>
           <div className="flex items-center space-x-2 mt-2">
             <div className="h-1 w-12 bg-gradient-to-r from-indigo-600 to-cyan-500 rounded-full"></div>
@@ -99,7 +107,9 @@ const BooksContainer = () => {
               className="w-full flex justify-between items-center px-5 py-3 rounded-xl font-semibold bg-white border-2 border-indigo-200 hover:border-cyan-400 shadow-md hover:shadow-lg hover:shadow-cyan-300/30 hover:scale-[1.02] transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-300/50"
             >
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-cyan-600 to-slate-800 text-sm">
-                {categories.find((c) => c.value === category.value)?.label}
+                {t(
+                  `${categories.find((c) => c.value === category.value)?.label}`
+                )}
               </span>
               <IoChevronDown
                 className={`text-lg text-cyan-600 transition-transform duration-300 ${
@@ -124,7 +134,7 @@ const BooksContainer = () => {
                           : "text-slate-700 hover:bg-gradient-to-r hover:from-indigo-50 hover:to-cyan-50"
                       }`}
                   >
-                    {cat.label}
+                    {t(`${cat.label}`)}
                   </li>
                 ))}
               </ul>
@@ -152,7 +162,7 @@ const BooksContainer = () => {
                     d="M12 4v16m8-8H4"
                   />
                 </svg>
-                <span>Add Book</span>
+                <span>{t("Add Book")}</span>
               </span>
             </button>
           )}

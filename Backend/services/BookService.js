@@ -35,11 +35,11 @@ export async function getBookById(id) {
 export async function addBook(data, creator) {
   data.createdBy = creator.id;
   return await CreateBook(data);
-}
+} 
 
 const verifyUser = (currentUser, bookCreator, method) => {
-  console.log("Book creator:", bookCreator, "Current user:", currentUser);
-  console.log(bookCreator == currentUser.id);
+  // console.log("Book creator:", bookCreator, "Current user:", currentUser);
+  // console.log(bookCreator == currentUser.id);
   if (currentUser.id !== bookCreator && currentUser.role !== "admin") {
     throw new Error(`you cant ${method}`);
   }
@@ -53,7 +53,7 @@ export async function deleteBook(id, currentUser) {
 
 export async function updateBook(id, data, currentUser) {
   const book = await GetBook(id);
-  console.log(currentUser, "currentUser");
+  // console.log(currentUser, "currentUser");
   verifyUser(currentUser, `${book.createdBy._id}`, "update"); // ✅ object كامل
   return await EditBook(id, data);
 }

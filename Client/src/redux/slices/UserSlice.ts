@@ -53,7 +53,7 @@ export const UpdateUserRoleAction = createAsyncThunk<
 
 // initial state
 const initialState: UserState = {
-  isLogin: !!localStorage.getItem("token"),
+  isLogin: !!localStorage.getItem("userToken"),
   token: "",
   error: "",
   user: localStorage.getItem("user")
